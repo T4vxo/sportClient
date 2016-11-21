@@ -1,0 +1,29 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <h2>Lägg till match</h2>
+            <div ng-show="!isLoggedIn">
+                <form ng-submit="loggIn()">
+                    <label>username<input type="text" ng-model="username" /></label><br/>
+                    <label>password<input type="password" ng-model="password" /></label><br/>
+                    <input type="submit" value="logga in" />
+                </form>
+            </div>
+            <div ng-show="isLoggedIn" >
+
+                <form ng-submit="addGame()">
+                    <label>Hemmalag<select ng-model="hl" style="width: 150px;">
+                            <option ng-repeat="team in teams" value="{{team.id}}">{{team.lagnamn}}</option>
+                        </select></label>
+                      <label>Bortalag<select ng-model="bl" style="width: 150px;">
+                            <option ng-repeat="team in teams" value="{{team.id}}">{{team.lagnamn}}</option>
+                        </select></label>
+                    <br/><label>Hemmapoäng<input type="number" max="3" min="0" ng-model="ph" /></label>
+                    <br/><label>Bortapoäng<input type="number" max="3" min="0" ng-model="pb" /></label><br/>
+                    <input type="submit" value="Lägg till match" />
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
