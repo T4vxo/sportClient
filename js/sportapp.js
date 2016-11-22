@@ -11,7 +11,36 @@ module.config(function ($urlRouterProvider, $stateProvider) {
         url: "/addgame",
         templateUrl: "templates/addgame.html",
         controller: "addgameCtrl"
+    }).state("changegame",{
+        url: "/changegame",
+        templateUrl: "templates/changegame.html",
+        controller: "changegameCtrl"
     });
+    
+});
+module.controller("changegameCtrl",function ($scope,$rootScope,sportService){
+    var promise = sportService.getGames();
+    promise.then(function (data){
+        $scope.games = data;
+    });
+    
+    sportService.getTeams().then(function (data) {
+        console.log(data);
+        $scope.teams = data;
+    });
+    
+    $scope.resolveTeam = function (id){
+        for(var i = 0; i < $scope.teams.length; i++){
+            if(id === $scope.teams[i].id){
+                return $scope.teams[i].lagnamn;
+            }
+        }
+    };
+    
+    $scope.removeGame = function (id){
+        sportService.removeGame(id);
+    };
+    
 });
 
 module.controller("homeCtrl", function ($scope, $rootScope, sportService) {
@@ -19,6 +48,8 @@ module.controller("homeCtrl", function ($scope, $rootScope, sportService) {
     promise.then(function (data) {
         $scope.table = data;
     });
+
+
 });
 
 module.controller("addgameCtrl", function ($scope, $rootScope, sportService) {
@@ -80,7 +111,7 @@ module.service("sportService", function ($q, $http, $rootScope) {
         }).error(function (data, status) {
             console.log("det blev fel");
         });
-    }
+    };
     this.loggIn = function (username, password) {
         var url = "http://localhost:8080/SportsApp/webresources/login";
         var auth = "Basic " + window.btoa(username + ":" + password);
@@ -98,5 +129,35 @@ module.service("sportService", function ($q, $http, $rootScope) {
                 .error(function (data, status) {
                     console.log("du är inte inloggad!");
                 });
+    };
+    this.getGames = function () {
+        var deffer = $q.defer();
+        var url = "http://localhost:8080/SportsApp/webresources/games";
+        var auth = "Basic " + window.btoa($rootScope.user + ":" + $rootScope.pass);
+
+        $http({
+            url: url,
+            method: "GET",
+            headers: {'Authorization': auth}
+        }).success(function (data, status) {
+            deffer.resolve(data);
+        });
+        return deffer.promise;
+    };
+    
+    this.removeGame = function (id){
+        var url = "http://localhost:8080/SportsApp/webresources/game/"+id;
+        var auth = "Basic " + window.btoa($rootScope.user + ":" + $rootScope.pass);
+
+        $http({
+            url: url,
+            method: "DELETE",
+            headers: {'Authorization': auth}
+        }).success(function (data, status) {
+            console.log("Match borttagen");
+        }).error(function (data, status) {
+            console.log("det blev fel");
+        });
+        
     };
 });
