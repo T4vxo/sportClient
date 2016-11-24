@@ -40,6 +40,24 @@ module.controller("changegameCtrl",function ($scope,$rootScope,sportService){
     $scope.removeGame = function (id){
         sportService.removeGame(id);
     };
+    $scope.fillForm = function (id){
+      for(var i = 0; i <  $scope.games.length;i++){
+          if( $scope.games[i].id === id){
+           $scope.formId = id;
+           $scope.formHL = $scope.games[i].hemmalag;
+           $scope.formBL = $scope.games[i].bortalag;
+           $scope.formPH = $scope.games[i].poanghemma;
+           $scope.formPB = $scope.games[i].poangborta;
+              
+          }          
+      }
+        
+    };
+    
+    $scope.submitForm = function (){
+        sportService.updateGame( $scope.formId,$scope.formHL,$scope.formBL, $scope.formPH, $scope.formPB);
+        
+    }
     
 });
 
@@ -67,7 +85,7 @@ module.controller("addgameCtrl", function ($scope, $rootScope, sportService) {
     };
 });
 
-module.service("sportService", function ($q, $http, $rootScope) {
+module.service("sportService", function ($q, $http, $rootScope, $route) {
     this.getTable = function () {
         var deffer = $q.defer();
         var url = "http://localhost:8080/SportsApp/webresources/table";
@@ -107,6 +125,30 @@ module.service("sportService", function ($q, $http, $rootScope) {
             headers: {'Authorization': auth}
         }).success(function (data, status) {
             console.log("Match tillagd");
+
+        }).error(function (data, status) {
+            console.log("det blev fel");
+        });
+    };
+    
+    this.updateGame = function (id,hl, bl, ph, pb) {
+        var data = {
+            id:id,
+            hemmalag: hl,
+            bortalag: bl,
+            poanghemma: ph,
+            poangborta: pb
+        };
+        var url = "http://localhost:8080/SportsApp/webresources/game";
+        var auth = "Basic " + window.btoa($rootScope.user + ":" + $rootScope.pass);
+
+        $http({
+            url: url,
+            method: "PUT",
+            data: data,
+            headers: {'Authorization': auth}
+        }).success(function (data, status) {
+            console.log("Match uppdaterad");
 
         }).error(function (data, status) {
             console.log("det blev fel");
@@ -155,6 +197,7 @@ module.service("sportService", function ($q, $http, $rootScope) {
             headers: {'Authorization': auth}
         }).success(function (data, status) {
             console.log("Match borttagen");
+           $route.reload();
         }).error(function (data, status) {
             console.log("det blev fel");
         });

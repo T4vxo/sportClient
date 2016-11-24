@@ -8,7 +8,7 @@
                     <th>Poäng hemma</th><th>Poäng borta</th><th>Remove</th>
                 </tr>
                 <tr ng-repeat="game in games">
-                    <td><button class="btn btn-success">Edit</button></td>
+                    <td><button ng-click="fillForm(game.id)" class="btn btn-success" data-toggle="modal" data-target="#modal">Edit</button></td>
                     <td>{{resolveTeam(game.hemmalag)}}</td>
                     <td>{{resolveTeam(game.bortalag)}}</td>
                     <td>{{game.poanghemma}}p</td>
@@ -16,6 +16,29 @@
                     <td><a ng-click="removeGame(game.id)">x</a></td>
                 </tr>
             </table>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+            </div>
+            <div class="modal-body">
+                <form ng-submit="submitForm()">
+                    <label>Hemmalag: <input ng-model="formHL" type="number" /></label><br/>
+                    <label>Bortalag <input ng-model="formBL" type="number" /></label><br/>
+                    <label>Poäng hemma: <input ng-model="formPH" type="number" /></label><br/>
+                    <label>Poäng borta: <input ng-model="formPB" type="number" /></label><br/>
+                    <div class="modal-footer">
+                        <input class="btn btn-block btn-primary" type="submit" value="Uppdatera" />
+                    </div>
+                </form>
+            </div>
+
         </div>
     </div>
 </div>

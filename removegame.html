@@ -1,0 +1,24 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <table class="table-striped table">
+                <tr>
+                    <th>Edit</th>
+                    <th>Hemmalag</th>
+                    <th>Bortalag</th>
+                    <th>PoängHemma</th>
+                    <th>PoängBorta</th>
+                    <th>Ta bort</th>
+                </tr>
+                <tr ng-repeat="game in games">
+                    <td><a class="btn btn-primary">Edit</a></td>
+                    <td>{{game.hemmalag}}</td>
+                    <td>{{game.bortalag}}</td>
+                    <td>{{game.poanghemma}}</td>
+                    <td>{{game.poangborta}}</td>
+                    <td><a ng-click="removeGame(game.id)">x</a></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
